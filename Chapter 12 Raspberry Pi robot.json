@@ -1,0 +1,112 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "my hosted thing",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "HelloWorldIntent",
+                    "slots": [],
+                    "samples": [
+                        "hello",
+                        "how are you",
+                        "say hi world",
+                        "say hi",
+                        "hi",
+                        "say hello world",
+                        "say hello"
+                    ]
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "MoveDirectionIntent",
+                    "slots": [
+                        {
+                            "name": "direction",
+                            "type": "directions"
+                        }
+                    ],
+                    "samples": [
+                        "go {direction}",
+                        "travel {direction}",
+                        "move {direction}"
+                    ]
+                },
+                {
+                    "name": "StopMovingIntent",
+                    "slots": [],
+                    "samples": [
+                        "stop going forward",
+                        "stop going backward",
+                        "stop going back",
+                        "quit going back",
+                        "quit going forward",
+                        "quit moving",
+                        "stop turning",
+                        "stop moving"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "directions",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "left"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "right"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "backward"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "backwards"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "forwards"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "back"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "forward"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
