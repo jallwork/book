@@ -1,0 +1,74 @@
+{
+    "document": {
+        "type": "APL",
+        "version": "1.8",
+        "license": "Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: LicenseRef-.amazon.com.-AmznSL-1.0\nLicensed under the Amazon Software License  http://aws.amazon.com/asl/",
+        "settings": {},
+        "theme": "dark",
+        "import": [],
+        "resources": [],
+        "styles": {},
+        "onMount": [],
+        "graphics": {},
+        "commands": {},
+        "layouts": {},
+        "mainTemplate": {
+            "parameters": [
+                "payload"
+            ],
+            "items": [
+                {
+                    "items": [
+                        {
+                            "alignItems": "center",
+                            "type": "Container",
+                            "width": "100%",
+                            "height": "80%",
+                            "items": [
+                                {
+                                    "source": "${payload.myData.image.perkin}",
+                                    "type": "Image",
+                                    "width": "640px",
+                                    "height": "480px"
+                                }
+                            ]
+                        },
+                        {
+                            "alignItems": "center",
+                            "type": "Container",
+                            "width": "100%",
+                            "height": "20%",
+                            "items": [
+                                {
+                                    "text": "${payload.myData.text.myText}",
+                                    "fontSize": "32dp",
+                                    "fontStyle": "normal",
+                                    "type": "Text",
+                                    "width": "300dp",
+                                    "height": "64dp",
+                                    "paddingTop": "12dp",
+                                    "paddingBottom": "12dp"
+                                }
+                            ]
+                        }
+                    ],
+                    "alignItems": "center",
+                    "type": "Container",
+                    "width": "100%",
+                    "height": "100%"
+                }
+            ]
+        }
+    },
+    "datasources": {
+        "myData": {
+            "image": {
+                "perkin": "https://raw.githubusercontent.com/jallwork/savingTemporaryAlexaFiles/main/perkin.png"
+            },
+            "text": {
+                "myText": "This is Perkin"
+            }
+        }
+    },
+    "sources": {}
+}
