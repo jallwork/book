@@ -1,0 +1,16 @@
+{
+  "type": "APLA",
+  "version": "0.91",
+  "description": "Simple document to say hello",
+  "mainTemplate": {
+    "parameters": [
+      "payload"
+    ],
+    "items": [
+      {
+        "type": "Speech",
+        "content": "${payload.myData.text.welcome}"
+      }
+    ]
+  }
+}
