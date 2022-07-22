@@ -1,0 +1,34 @@
+{
+    "type": "APL",
+    "version": "1.6",
+    "license": "Copyright 2021 Amazon.com, Inc. or its affiliates.",
+    "settings": {},
+    "theme": "dark",
+    "import": [],
+    "resources": [],
+    "styles": {},
+    "onMount": [],
+    "graphics": {},
+    "commands": {},
+    "layouts": {},
+    "mainTemplate": {
+        "parameters": [
+            "payload"
+        ],
+        "items": [
+            {
+                "items": [
+                    {
+                        "text": "${payload.data.properties.oddFactText}",
+                        "type": "Text",
+                        "speech": "${payload.data.properties.outputSpeech}",
+                        "id": "oddFactText",
+                        "width": "100vw",
+                        "height": "10vh"
+                    }
+                ],
+                "type": "Container"
+            }
+        ]
+    }
+}
