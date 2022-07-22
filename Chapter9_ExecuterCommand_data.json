@@ -1,0 +1,12 @@
+{
+	"data": {
+		"properties": {
+			"oddFactText": "Flamingos bend their legs at the ankle, not the knee"
+		},
+		"transformers": [{
+			"inputPath": "oddFactText",
+			"outputName": "outputSpeech",
+			"transformer": "textToSpeech"
+		}]
+	}
+}
