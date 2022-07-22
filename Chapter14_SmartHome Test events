@@ -1,0 +1,70 @@
+Discovery directive
+
+{
+  "directive": {
+    "header": {
+      "namespace": "Alexa.Discovery",
+      "name": "Discover",
+      "payloadVersion": "3",
+      "messageId": "1bd5d003-31b9-476f-ad03-71d471922820"
+    },
+    "payload": {
+      "scope": {
+        "type": "BearerToken",
+        "token": "access-token-from-skill"
+      }
+    }
+  }
+}
+
+PowerOn and PowerOff directive (change "TurnOn" to "TurnOff" for power off)
+
+{
+  "directive": {
+    "header": {
+      "namespace": "Alexa.PowerController",
+      "name": "TurnOn",
+      "messageId": "SomeNumber",
+      "correlationToken": "SomeTokenNumber",
+      "payloadVersion": "3"
+    },
+    "endpoint": {
+      "scope": {
+        "type": "BearerToken",
+        "token": "access-token-from-skill"
+      },
+      "endpointId": "sense-hat-01",
+      "cookie": {}
+    },
+    "payload": {}
+  }
+}
+
+ColorController directive
+
+{
+  "directive": {
+    "header": {
+      "namespace": "Alexa.ColorController",
+      "name": "TurnOn",
+      "messageId": "SomeNumber",
+      "correlationToken": "SomeTokenNumber",
+      "payloadVersion": "3"
+    },
+    "endpoint": {
+      "scope": {
+        "type": "BearerToken",
+        "token": "access-token-from-skill"
+      },
+      "endpointId": "sense-hat-01",
+      "cookie": {}
+    },
+    "payload": {
+      "color": {
+        "hue": 120,
+        "saturation": 1,
+        "brightness": 1
+      }
+    }
+  }
+}
