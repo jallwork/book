@@ -1,0 +1,161 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "my name skill",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "HelloWorldIntent",
+                    "slots": [],
+                    "samples": [
+                        "hello",
+                        "how are you",
+                        "say hi world",
+                        "say hi",
+                        "hi",
+                        "say hello world",
+                        "say hello"
+                    ]
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "GetNameIntent",
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.GB_FIRST_NAME"
+                        }
+                    ],
+                    "samples": [
+                        "it's {name}",
+                        "{name}",
+                        "my name is {name}"
+                    ]
+                },
+                {
+                    "name": "GetBirthdayIntent",
+                    "slots": [
+                        {
+                            "name": "month",
+                            "type": "AMAZON.Month",
+                            "samples": [
+                                "{day} {month}",
+                                "{month}",
+                                "I was born in {month}"
+                            ]
+                        },
+                        {
+                            "name": "day",
+                            "type": "AMAZON.Ordinal",
+                            "samples": [
+                                "{day}",
+                                "I was born on the {day}",
+                                "I was born on {day}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "my birthday is {month}",
+                        "my birthday is {day} ",
+                        "my birthday is {day} {month}",
+                        "I was born on {day}",
+                        "it's {day}",
+                        "{day} {month}",
+                        "I was born on {day} {month}",
+                        "I was born in {month}"
+                    ]
+                }
+            ],
+            "types": []
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "GetBirthdayIntent",
+                    "delegationStrategy": "ALWAYS",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "month",
+                            "type": "AMAZON.Month",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.694424171981.43684950663"
+                            }
+                        },
+                        {
+                            "name": "day",
+                            "type": "AMAZON.Ordinal",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.694424171981.1466663306202"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.694424171981.1466663306202",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What day were you born. Please give me a number, rather than a day"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "I was born on the fifteenth, when were you born?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "On what day were you born?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "on which date were you born?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.694424171981.43684950663",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Please tell me the month you were born in."
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "In which month were you born?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Which month were you born?"
+                    }
+                ]
+            }
+        ]
+    }
+}
