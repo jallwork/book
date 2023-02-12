@@ -1,0 +1,197 @@
+Creating a Raspberry Pi Alexa device has chenged.
+
+This is the subject of a yet unpublished Elektor article. I will add a link when I get it.
+
+In the meantime, here's the text from the article:
+
+Raspberry Pi as a stand-alone Alexa device
+Introduction
+In this article we’ll see how to turn our Raspberry Pi into a stand-alone Alexa device. We’ll install the Alexa Amazon Voice Service (AVS) on the Raspberry Pi. There are three main parts
+1.	Set up your Raspberry Pi and build the AVS Device SDK
+2.	Register your AVS device with Amazon
+3.	Run, authorize and use the sample app
+This sample app doesn’t use the wake word on your Pi, instead using a tap-to-talk command. You type T and enter, then talk to Alexa.
+1.	Set up your Raspberry Pi and install the AVS SDK
+Prerequisites. Use the fastest Pi you can find. I used a Raspberry Pi 4 running Raspbian GNU/Linux 11 (bullseye). My Pi only had 1G and 8G is preferred, so I had to increase the swap size.
+You will also need a microphone and speakers or headphones (I used a simple USB microphone and 3.5mm jack headphones)
+Start with a fresh build using Raspberry Pi Imager and Bullseye OS. See https://www.raspberrypi.com/software/. 
+If you don’t know how to do that, start with https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up
+I use PuTTY to initially connect to my Pi. Update the software and restart your Pi as follows:
+•	Update the repository packages:	sudo apt update
+•	Run the update command:		sudo apt dist-upgrade
+Follow any instructions and wait for the Pi to update.
+•	Remove unwanted files: 		sudo apt clean
+•	And restart your device: 		sudo reboot
+If you need to check which OS you’re running on your Pi, enter cat /etc/os-release
+You can find out your cpu info using cat /proc/cpuinfo and your memory with cat /proc/meminfo or your pi using cat /sys/firmware/devicetree/base/model
+If you want to use VNC as I do, run sudo raspi-config command. Choose Interfaces, enable VNC and use Tab to Finish.
+ 
+Increase memory swap size
+If your Pi doesn’t have 8Mbytes of memory, you will have to increase your memory swap size as follows:
+•	Stop using swap files
+sudo dphys-swapfile swapoff
+•	Use your editor (nano) to change the swap configuration file
+sudo nano /etc/dphys-swapfile
+•	replace CONF_SWAPSIZEm say to 1024 (Mbytes) and save the file
+CONF_SWAPSIZE=1024
+•	re-initialize the Raspberry Pi’s swap file
+sudo dphys-swapfile setup
+•	Turn swap files usage back on
+sudo dphys-swapfile swapon
+•	Restart your Pi : sudo reboot
+Set up your microphone and headphones/speakers. 
+I plugged my microphone into the top left-hand USB port, which used device 0,0:
+Find out its connection, type arecord -l (that’s a little ‘L’)
+**** List of CAPTURE Hardware Devices ****
+card 3: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0 
+
+(in this case 0,0)
+Edit your /home/pi/.asoundrc to suit your sound set up, mine is:
+pcm.!default {
+  type asym
+  capture.pcm "mic"
+}
+pcm.mic {
+  type plug
+  slave {
+    pcm "hw:0,0"
+  }
+}
+Test your recording (terminate with control-C)
+arecord --format=S16_LE --rate=16000 --file-type=wav out.wav
+and playback
+aplay out.wav
+If your recording and speakers don’t work, refer to the troubleshooting section in the references.
+Create the folders for your SDK
+Start two terminal sessions. In one run top, so that you can check for progress, errors or lack of memory. In the other set up your file structure. Execute the following commands:
+cd $HOME
+mkdir sdk-folder
+cd sdk-folder
+mkdir sdk-build sdk-source sdk-install db
+Install the SDK dependencies:
+sudo apt-get -y install \
+git gcc cmake build-essential libsqlite3-dev libcurl4-openssl-dev libfaad-dev \
+libgtest-dev libssl-dev libsoup2.4-dev libgcrypt20-dev libgstreamer-plugins-bad1.0-dev \
+libnghttp2-dev nghttp2 gstreamer1.0-plugins-good libasound2-dev doxygen portaudio19-dev
+Clone the SDK code into the sdk-source folder from GitHub:
+
+cd $HOME/sdk-folder/sdk-source
+git clone --single-branch https://github.com/alexa/avs-device-sdk.git
+
+PortAudio is used for the recording and playback. Add the path for it:
+PORTAUDIO_LIB_PATH=$(find -P /usr/lib -name libportaudio.so)
+
+Add the PortAudio and gStreamer
+cd $HOME/sdk-folder/sdk-build
+cmake $HOME/sdk-folder/sdk-source/avs-device-sdk \
+    -DGSTREAMER_MEDIA_PLAYER=ON \
+    -DPORTAUDIO=ON \
+    -DPKCS11=OFF \
+    -DPORTAUDIO_LIB_PATH=$PORTAUDIO_LIB_PATH \
+    -DPORTAUDIO_INCLUDE_DIR=/usr/include \
+    -DCMAKE_BUILD_TYPE=DEBUG
+And make the sample app
+make SampleApp
+You can try make -j2 SampleApp or make -j4 SampleApp which use 2 or 4 cpus.
+Don’t worry if it hangs at 93%, it will come alive again.
+ 
+You should eventually get “Built target SampleApp”. It took about 40 minutes in my Raspberry Pi 4 running one cpu.
+Now we need to register our PI with Amazon.
+2.	Register your AVS device with Amazon and obtain a config.json file
+a)	Create a free Amazon developer account at developer.amazon.com if you don’t have one.
+
+b)	Register an AVS built-in device.
+Log into the developer console. Select Alexa Voice Service
+
+ 
+Select Manage your products from the next screen
+ 
+ 
+And then Add new product
+ 
+In the next screen add the information about your device. The Product name is shown to end users in the Alexa App and the Product ID is used to identify the device during authorisation.
+Choose a Product name and ID (I used Raspberry2 and Raspberry2), for the Product type choose Device with an Alexa Built-in and No to companion app, Other for Product category, Enter something for the description (e.g. prototype), and Hands-free for the interaction.
+ 
+ 
+Ignore upload an image and say No to the rest of the questions
+Finally click Next.
+c)	Set up your security profile.
+In the next screen you can select an existing security profile or create new profile. 
+Click Create a new profile and add a Profile name and description
+ 
+When you click NEXT you’re provided with a Security Profile ID. Copy that for your records. It’s like this:
+amzn1.application.8ebda94958345678881551dca2e15bc1
+Select ‘Other devices and platforms’
+ 
+Click Generate ID and copy the Client ID, e.g:
+amzn1.application-oa2-client.049c89d3584a4a4f83b5f23cd4c54321
+ 
+Click DOWNLOAD to obtain the config.json file that we’ll need for our Pi. This simply contains the clientId and productId:
+{
+ "deviceInfo": {
+  "clientId": "amzn1.application-oa2-client.049c89d3584…",
+  "productId": "Raspberry2"
+ }
+}
+Agree to the terms and Finish
+Your product should be created
+ 
+And it should be listed in your products. 
+We now have our device registered, and we need to install Alexa Voice Service on the Pi.
+3.	Run, authorize and use the sample app
+Transfer the config.json file you downloaded onto your Pi’s 
+$HOME/sdk-folder/sdk-source/avs-device-sdk/tools/Install
+I use WinSCP:
+ 
+Make a backup copy up your existing configuration file AlexaClientSDKConfig.json. Don’t just rename it. This is found in the folder: 
+/home/pi/sdk-folder/sdk-source/avs-device-sdk/Integration. You can use the terminal command
+cp AlexaClientSDKConfig.json AlexaClientSDKConfigBAK.json
+Run genConfig.sh script as follows to generate your config. This is found in the $HOME/sdk-folder/sdk-source/avs-device-sdk/tools/Install folder.
+
+ 
+Run these commands, including the parameters:
+cd $HOME/sdk-folder/sdk-source/avs-device-sdk/tools/Install
+
+bash $HOME/sdk-folder/sdk-source/avs-device-sdk/tools/Install/genConfig.sh \
+config.json \
+12345 \
+$HOME/sdk-folder/db \
+$HOME/sdk-folder/sdk-source/avs-device-sdk \
+$HOME/sdk-folder/sdk-build/Integration/AlexaClientSDKConfig.json \
+-DSDK_CONFIG_MANUFACTURER_NAME="raspberrypi" \
+-DSDK_CONFIG_DEVICE_DESCRIPTION="raspberrypi"
+You should get a ‘Completed generation’ message
+ 
+You will have to authorise your Pi the first time you run the App.
+Type in this code:
+export PA_ALSA_PLUGHW=1 
+cd $HOME/sdk-folder/sdk-build/
+./SampleApplications/ConsoleSampleApplication/src/SampleApp ./Integration/AlexaClientSDKConfig.json DEBUG9
+You will get a warning
+ 
+But soon get a Registration complete message
+ 
+On the PI, wait for the program to authorize and Alexa is waiting for you.
+You don’t get any prompt, only messages.
+ 
+
+Type ‘t’, press enter and speak to your Pi as an Alexa device. You don’t say “Alexa ..”
+Try “Tell me a joke”
+Music and Audio playback are not supported.
+I hope you enjoy running your Pi asn an Alexa device
+References:
+Pi setup video: https://www.youtube.com/watch?v=rGygESilg8w
+https://developer.amazon.com/en-GB/docs/alexa/avs-device-sdk/raspberry-pi.html
+https://github.com/alexa/avs-device-sdk.git
+Sound checks:
+https://pimylifeup.com/raspberrypi-microphone/
+Troubleshooting:
+https://developer.amazon.com/en-GB/docs/alexa/avs-device-sdk/troubleshooting.html
+
+Videos:
+#1 https://youtu.be/dV5KApyNOkU
+#2 https://youtu.be/H5Olx7P7z48
+#3 https://youtu.be/mghxl7J_aCg
+
