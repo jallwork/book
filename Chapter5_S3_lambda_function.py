@@ -4,6 +4,11 @@
 # Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
 # session persistence, api calls, and more.
 # This sample is built using the handler classes approach in skill builder.
+
+# If this doesn't show on Developer Console
+# USE Hub Landscape Small 
+
+
 import logging
 import ask_sdk_core.utils as ask_utils
 
